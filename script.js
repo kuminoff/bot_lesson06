@@ -1,60 +1,44 @@
 "use strict"; 
 
 const isNumber = function (number) {
-    return !isNaN(parseFloat(number)) && isFinite(number) && !/\s/g.test(number);
-}
+  return !isNaN(parseFloat(number)) && isFinite(number) && !/\s/g.test(number);
+};
 
-const bot = function () {
+const bot = function (min = 1, max = 100) {
 
-  let num = Math.round(Math.random() * 100);
-  console.log(num);
+  const num = Math.floor(Math.random() * (max - min + 1)) + min;
   let attempt = 10;
-  let anotherGame;
-
 
   const assumption = function () {
-
-    if (attempt == 0) {
-      anotherGame = confirm(`Игра окончена, хотели бы сыграть еще?`);
-      return anotherGame;
-    }
-
-    let ans = prompt(`Угадай число от 0 до 100`);
-    console.log(ans);
+    const ans = prompt(`Угадай число от ${min} до ${max}`);
+    console.log(`Загаданное число ${ans}`);
 
     switch (true) {
       case (ans === null):
-        anotherGame = confirm(`Игра окончена, хотели бы сыграть еще?`);
-        return anotherGame;
+        return null;
 
       case (!isNumber(ans)):
         alert(`Введи число!`);
         break;
 
       case (ans < num):
-        alert(`Загаданное число БОЛЬШЕ, осталось ${attempt} попыток`);
-        attempt--;
+        alert(`Загаданное число БОЛЬШЕ, осталось ${--attempt} попыток`);
         break;
 
       case (ans > num):
-        alert(`Загаданное число МЕНЬШЕ, осталось ${attempt} попыток`);
-        attempt--;
+        alert(`Загаданное число МЕНЬШЕ, осталось ${--attempt} попыток`);
         break;
 
       default:
-        anotherGame = confirm(`Поздравляю, Вы угадали!!! Хотели бы сыграть еще?`);
-        return anotherGame;
+        return confirm(`Поздравляю, Вы угадали!!! Хотели бы сыграть еще?`);
     }
-    assumption();
+
+    return attempt ? assumption() : confirm(`У вас закончились попытки, хотели бы сыграть еще \n\n Было загадано число ${num}`);
+
   };
 
-  assumption();
+  assumption() ? bot() : alert(`Спасибо за участие`);
 
-  if (anotherGame === true) {
-    bot();
-  } else if (anotherGame === false) {
-    alert(`Спасибо за участие`);
-  }
 };
 
 bot();
